@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "831387178882",
+    "project_id": "sema-campus-alu",
+    "storage_bucket": "sema-campus-alu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831387178882:android:d31dce7680d1d69d34219b",
+        "android_client_info": {
+          "package_name": "rw.alu.sema"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx8siVYxn_d2msn3Ix549Zh7Oubl1KOqM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
