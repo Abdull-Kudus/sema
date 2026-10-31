@@ -1,0 +1,122 @@
+rules_version = '2';
+
+// Sema security rules.
+// Access requires a signed-in, email-verified ALU account. Staff are identified
+// by the @alueducation.com domain, or by role "staff" on their user profile
+// (which only an admin can set from the Firebase Console).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function email() {
+      return request.auth.token.email.lower();
+    }
+
+    function isAlu() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && (email().matches('.*@alustudent[.]com$') || email().matches('.*@alueducation[.]com$'));
+    }
+
+    function isStaff() {
+      return isAlu() && (
+        email().matches('.*@alueducation[.]com$')
+        || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'staff'
+      );
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function changedOnly(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    function validCategory(c) {
+      return c in ['facilities', 'water', 'electricity', 'furniture', 'sanitation', 'safety', 'internet', 'other'];
+    }
+
+    function validStatus(s) {
+      return s in ['submitted', 'acknowledged', 'inProgress', 'resolved', 'rejected'];
+    }
+
+    function validReportContent(d) {
+      return d.title is string && d.title.size() >= 5 && d.title.size() <= 80
+        && d.description is string && d.description.size() >= 15 && d.description.size() <= 1000
+        && validCategory(d.category)
+        && d.priority in ['low', 'medium', 'high']
+        && d.location is string && d.location.size() > 0
+        && d.photoUrls is list && d.photoUrls.size() <= 3
+        && d.isAnonymous is bool;
+    }
+
+    // ---------- users ----------
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isStaff();
+      // A user creates their own profile and can never grant themselves staff.
+      allow create: if isOwner(uid) && isAlu()
+        && request.resource.data.role in ['student', 'staff']
+        && (request.resource.data.role == 'student' || email().matches('.*@alueducation[.]com$'));
+      allow update: if isOwner(uid) && changedOnly(['name', 'photoUrl', 'updatedAt']);
+      allow delete: if false;
+
+      match /notifications/{notificationId} {
+        allow read, delete: if isOwner(uid);
+        allow update: if isOwner(uid) && changedOnly(['read']);
+        // Staff notify reporters when a status changes.
+        allow create: if isStaff();
+      }
+    }
+
+    // ---------- reports ----------
+    match /reports/{reportId} {
+      allow read: if isAlu();
+
+      allow create: if isAlu()
+        && request.resource.data.reporterId == request.auth.uid
+        && request.resource.data.status == 'submitted'
+        && request.resource.data.upvoterIds.size() == 0
+        && validReportContent(request.resource.data);
+
+      // Owners edit their own report until staff pick it up.
+      // Any ALU user can add/remove only their own "me too" vote.
+      // Staff move it through the workflow.
+      allow update: if
+        (isOwner(resource.data.reporterId)
+          && resource.data.status == 'submitted'
+          && changedOnly(['title', 'description', 'category', 'priority', 'location',
+                          'locationDetail', 'photoUrls', 'photoPaths', 'isAnonymous', 'updatedAt'])
+          && validReportContent(request.resource.data))
+        || (isAlu()
+          && changedOnly(['upvoterIds'])
+          && request.resource.data.upvoterIds.toSet()
+               .difference(resource.data.upvoterIds.toSet())
+               .union(resource.data.upvoterIds.toSet().difference(request.resource.data.upvoterIds.toSet()))
+               .hasOnly([request.auth.uid]))
+        || (isStaff()
+          && changedOnly(['status', 'updatedAt', 'resolvedAt', 'handledBy'])
+          && validStatus(request.resource.data.status));
+
+      allow delete: if isStaff()
+        || (isOwner(resource.data.reporterId) && resource.data.status == 'submitted');
+
+      // Status history. The reporter writes the first "submitted" entry,
+      // every later entry comes from staff.
+      match /updates/{updateId} {
+        allow read: if isAlu();
+        allow create: if isStaff()
+          || (isAlu()
+            && request.resource.data.authorId == request.auth.uid
+            && request.resource.data.status == 'submitted');
+        allow update: if false;
+        allow delete: if isStaff()
+          || (isAlu() && get(/databases/$(database)/documents/reports/$(reportId)).data.reporterId == request.auth.uid);
+      }
+    }
+  }
+}
