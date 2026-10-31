@@ -53,13 +53,14 @@ class DefaultFirebaseOptions {
     projectId: 'sema-campus-alu',
     storageBucket: 'sema-campus-alu.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyANdRWfIGnTq-HDFK38GJJlGyjgag2vtcY',
     appId: '1:831387178882:ios:f396994f53557b3834219b',
     messagingSenderId: '831387178882',
     projectId: 'sema-campus-alu',
     storageBucket: 'sema-campus-alu.firebasestorage.app',
+    androidClientId: '831387178882-cber0is84ik83go1pjr5mabfkr204gae.apps.googleusercontent.com',
+    iosClientId: '831387178882-jm4ic1s27r9sprtpmd3uj04de27n1cn8.apps.googleusercontent.com',
     iosBundleId: 'rw.alu.sema',
   );
 }

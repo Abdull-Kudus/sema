@@ -12,7 +12,20 @@
           "package_name": "rw.alu.sema"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "831387178882-cber0is84ik83go1pjr5mabfkr204gae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rw.alu.sema",
+            "certificate_hash": "ab034d84177b2c18dab8c7bbcb19476f15a303a8"
+          }
+        },
+        {
+          "client_id": "831387178882-qj35hqpmufbcsh4asv52ak4lv8qntou9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBx8siVYxn_d2msn3Ix549Zh7Oubl1KOqM"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831387178882-qj35hqpmufbcsh4asv52ak4lv8qntou9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "831387178882-jm4ic1s27r9sprtpmd3uj04de27n1cn8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "rw.alu.sema"
+              }
+            }
+          ]
         }
       }
     }
