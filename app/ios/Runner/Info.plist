@@ -6,7 +6,20 @@
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
-		<key>NSCameraUsageDescription</key>
+		<key>GIDClientID</key>
+	<string>831387178882-jm4ic1s27r9sprtpmd3uj04de27n1cn8.apps.googleusercontent.com</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.831387178882-jm4ic1s27r9sprtpmd3uj04de27n1cn8</string>
+			</array>
+		</dict>
+	</array>
+	<key>NSCameraUsageDescription</key>
 	<string>Sema uses the camera so you can photograph a campus issue for staff.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Sema lets you attach photos of a campus issue to your report.</string>
