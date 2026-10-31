@@ -1,0 +1,30 @@
+rules_version = '2';
+
+// Photos are readable by any verified ALU account and writable only by their owner.
+// Uploads must be images under 5 MB.
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAlu() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && (request.auth.token.email.lower().matches('.*@alustudent[.]com$')
+            || request.auth.token.email.lower().matches('.*@alueducation[.]com$'));
+    }
+
+    function isImage() {
+      return request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    match /reports/{uid}/{reportId}/{fileName} {
+      allow read: if isAlu();
+      allow create, update: if isAlu() && request.auth.uid == uid && isImage();
+      allow delete: if isAlu() && request.auth.uid == uid;
+    }
+
+    match /avatars/{uid}/{fileName} {
+      allow read: if isAlu();
+      allow write: if isAlu() && request.auth.uid == uid && (request.resource == null || isImage());
+    }
+  }
+}
