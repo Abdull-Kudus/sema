@@ -19,11 +19,11 @@ enum ReportCategory {
   final IconData icon;
 
   Tone tone(SemaColors c) => switch (this) {
-    facilities => c.violet,
+    facilities => c.azure,
     water => c.sky,
     electricity => c.amber,
     furniture => c.orange,
-    sanitation => c.teal,
+    sanitation => c.lime,
     safety => c.crimson,
     internet => c.pink,
     other => c.emerald,
@@ -90,7 +90,7 @@ enum ReportStatus {
   Tone tone(SemaColors c) => switch (this) {
     submitted => c.amber,
     acknowledged => c.sky,
-    inProgress => c.violet,
+    inProgress => c.azure,
     resolved => c.emerald,
     rejected => c.crimson,
   };
