@@ -49,19 +49,28 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     });
   }
 
-  Future<void> _check() async {
+  /// [manual] is true when the user tapped "I have verified" and expects feedback.
+  Future<void> _check({bool manual = false}) async {
     try {
       // The router redirects into the app once userChanges() reports verification.
-      await ref.read(authRepositoryProvider).refreshVerification();
+      final verified = await ref.read(authRepositoryProvider).refreshVerification();
+      if (manual && !verified && mounted) {
+        Toast.show(context, 'Not verified yet. Open the link in the newest email.', error: true);
+      }
     } catch (_) {
       // Network blips are retried on the next tick.
+      if (manual && mounted) Toast.show(context, 'Could not check. Try again.', error: true);
     }
   }
 
   Future<void> _resend() async {
     final ok = await ref.read(authControllerProvider.notifier).resendVerification();
     if (!mounted) return;
-    Toast.show(context, ok ? 'Verification email sent' : 'Could not send. Try again shortly.', error: !ok);
+    Toast.show(
+      context,
+      ok ? 'New email sent. Earlier links no longer work.' : 'Could not send. Try again shortly.',
+      error: !ok,
+    );
     if (ok) _startCooldown();
   }
 
@@ -114,7 +123,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 ],
               ),
               const Spacer(),
-              FilledButton(onPressed: _check, child: const Text('I have verified')),
+              FilledButton(onPressed: () => _check(manual: true), child: const Text('I have verified')),
               const SizedBox(height: Space.sm),
               OutlinedButton(
                 onPressed: _secondsLeft > 0 ? null : _resend,
@@ -124,7 +133,11 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 onPressed: () => ref.read(authControllerProvider.notifier).signOut(),
                 child: const Text('Use a different account'),
               ),
-              Text('Tip: check your spam or “Other” folder.', style: context.text.bodySmall),
+              Text(
+                'Only the newest email’s link works. Check spam or “Other” too.',
+                style: context.text.bodySmall,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),
