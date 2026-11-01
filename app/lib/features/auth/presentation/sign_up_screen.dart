@@ -103,7 +103,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           const SizedBox(height: Space.xs),
                           TonePill(
                             label: 'Joining as ${role.label.toLowerCase()}',
-                            tone: role == UserRole.staff ? c.violet : c.sky,
+                            tone: role == UserRole.staff ? c.azure : c.sky,
                             icon: role == UserRole.staff
                                 ? SolarIconsBold.shieldUser
                                 : SolarIconsBold.squareAcademicCap,

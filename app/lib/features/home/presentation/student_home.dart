@@ -188,7 +188,7 @@ class _StatsGrid extends StatelessWidget {
         icon: SolarIconsBold.documents,
         value: total,
         label: 'All reports',
-        tone: c.violet,
+        tone: c.azure,
         onTap: () => onTap(null),
       ),
       StatTile(
