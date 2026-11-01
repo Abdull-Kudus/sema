@@ -44,7 +44,7 @@ class StaffDashboard extends ConsumerWidget {
       children: [
         HomeHeader(user: user, subtitle: 'Campus console'),
         const SizedBox(height: Space.md),
-        TonePill(label: 'Staff console', tone: c.violet, icon: SolarIconsBold.shieldUser),
+        TonePill(label: 'Staff console', tone: c.azure, icon: SolarIconsBold.shieldUser),
         const SizedBox(height: Space.md),
         _KpiHero(open: stats?.open ?? 0, rate: stats?.resolutionRate ?? 0, average: stats?.averageResolution),
         const SizedBox(height: Space.md),

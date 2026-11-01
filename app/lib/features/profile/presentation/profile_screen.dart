@@ -133,7 +133,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Center(
               child: TonePill(
                 label: user.role.label,
-                tone: user.isStaff ? c.violet : c.sky,
+                tone: user.isStaff ? c.azure : c.sky,
                 icon: user.isStaff ? SolarIconsBold.shieldUser : SolarIconsBold.squareAcademicCap,
               ),
             ),
