@@ -16,6 +16,7 @@ class Report {
     required this.reporterId,
     required this.createdAt,
     required this.updatedAt,
+    this.spot = '',
     this.locationDetail = '',
     this.photoUrls = const [],
     this.photoPaths = const [],
@@ -33,7 +34,12 @@ class Report {
   final ReportCategory category;
   final ReportPriority priority;
   final ReportStatus status;
+
+  /// Campus area (a commons, the staff area…).
   final String location;
+
+  /// Spot inside the area, such as a learning lab or the washrooms.
+  final String spot;
   final String locationDetail;
   final List<String> photoUrls;
   final List<String> photoPaths;
@@ -47,7 +53,8 @@ class Report {
   final DateTime updatedAt;
   final DateTime? resolvedAt;
 
-  String get fullLocation => locationDetail.isEmpty ? location : '$location · $locationDetail';
+  /// Area, spot and free-text detail, e.g. "Social Commons · Washrooms · 2nd floor".
+  String get fullLocation => [location, spot, locationDetail].where((p) => p.isNotEmpty).join(' · ');
 
   int get upvotes => upvoterIds.length;
 
@@ -73,6 +80,7 @@ class Report {
       priority: ReportPriority.parse(d['priority'] as String?),
       status: ReportStatus.parse(d['status'] as String?),
       location: d['location'] as String? ?? '',
+      spot: d['spot'] as String? ?? '',
       locationDetail: d['locationDetail'] as String? ?? '',
       photoUrls: List<String>.from(d['photoUrls'] as List? ?? const []),
       photoPaths: List<String>.from(d['photoPaths'] as List? ?? const []),
@@ -97,6 +105,7 @@ class ReportDraft {
     required this.category,
     required this.priority,
     required this.location,
+    this.spot = '',
     this.locationDetail = '',
     this.isAnonymous = false,
   });
@@ -106,6 +115,7 @@ class ReportDraft {
   final ReportCategory category;
   final ReportPriority priority;
   final String location;
+  final String spot;
   final String locationDetail;
   final bool isAnonymous;
 
@@ -115,6 +125,7 @@ class ReportDraft {
     'category': category.name,
     'priority': priority.name,
     'location': location,
+    'spot': spot,
     'locationDetail': locationDetail.trim(),
     'isAnonymous': isAnonymous,
   };
