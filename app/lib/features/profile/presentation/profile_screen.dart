@@ -251,7 +251,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(icon, color: context.colors.brand, size: 20),
+                      Icon(icon, color: context.colors.brandText, size: 20),
                       const SizedBox(width: Space.sm),
                       Expanded(child: Text(text, style: context.text.bodyMedium)),
                     ],
@@ -292,7 +292,7 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
     onTap: onTap,
-    leading: Icon(icon, color: context.colors.brand),
+    leading: Icon(icon, color: context.colors.brandText),
     title: Text(label, style: context.text.titleSmall),
     trailing: Icon(SolarIconsOutline.altArrowRight, color: context.colors.muted, size: 18),
   );

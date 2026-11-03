@@ -24,6 +24,7 @@ class SemaColors extends ThemeExtension<SemaColors> {
     required this.text,
     required this.muted,
     required this.brand,
+    required this.brandText,
     required this.brandDeep,
     required this.brandSoft,
     required this.onBrand,
@@ -46,7 +47,12 @@ class SemaColors extends ThemeExtension<SemaColors> {
   final Color line;
   final Color text;
   final Color muted;
+
+  /// Fills: buttons, selected chips, badges. White text sits on it.
   final Color brand;
+
+  /// Brand-coloured text and icons on page, panel and card surfaces.
+  final Color brandText;
   final Color brandDeep;
   final Color brandSoft;
   final Color onBrand;
@@ -73,6 +79,7 @@ class SemaColors extends ThemeExtension<SemaColors> {
     text: AppPalette.ink,
     muted: AppPalette.slate,
     brand: AppPalette.azure,
+    brandText: AppPalette.azure,
     brandDeep: AppPalette.azureDeep,
     brandSoft: AppPalette.azureMist,
     onBrand: AppPalette.white,
@@ -80,7 +87,8 @@ class SemaColors extends ThemeExtension<SemaColors> {
     heroEnd: AppPalette.azureDeep,
     amber: Tone(AppPalette.amber, AppPalette.amberMist),
     sky: Tone(AppPalette.sky, AppPalette.skyMist),
-    azure: Tone(AppPalette.azure, AppPalette.azureMist),
+    // Deep azure text keeps pills readable on the pale azure tint.
+    azure: Tone(AppPalette.azureDeep, AppPalette.azureMist),
     emerald: Tone(AppPalette.emerald, AppPalette.emeraldMist),
     crimson: Tone(AppPalette.crimson, AppPalette.crimsonMist),
     lime: Tone(AppPalette.lime, AppPalette.limeMist),
@@ -96,7 +104,9 @@ class SemaColors extends ThemeExtension<SemaColors> {
     line: AppPalette.smoke,
     text: AppPalette.white,
     muted: AppPalette.ash,
-    brand: AppPalette.azureBright,
+    // Azure keeps white button text readable; the brighter azure is for text on black.
+    brand: AppPalette.azure,
+    brandText: AppPalette.azureBright,
     brandDeep: AppPalette.azure,
     brandSoft: AppPalette.azureNight,
     onBrand: AppPalette.white,
@@ -128,6 +138,7 @@ class SemaColors extends ThemeExtension<SemaColors> {
       text: c(text, other.text),
       muted: c(muted, other.muted),
       brand: c(brand, other.brand),
+      brandText: c(brandText, other.brandText),
       brandDeep: c(brandDeep, other.brandDeep),
       brandSoft: c(brandSoft, other.brandSoft),
       onBrand: c(onBrand, other.onBrand),

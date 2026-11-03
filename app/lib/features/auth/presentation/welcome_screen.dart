@@ -42,7 +42,7 @@ class WelcomeScreen extends ConsumerWidget {
                   children: [
                     TextSpan(
                       text: 'Fix campus.',
-                      style: TextStyle(color: c.brand),
+                      style: TextStyle(color: c.brandText),
                     ),
                   ],
                 ),
@@ -101,29 +101,21 @@ class _HeroPreview extends StatelessWidget {
     final c = context.colors;
     Widget card(ReportCategory cat, String title, ReportStatus status, double angle) => Transform.rotate(
       angle: angle,
+      // Sized to its content so the whole title shows.
       child: Container(
-        width: 250,
         padding: const EdgeInsets.all(Space.sm),
         decoration: BoxDecoration(
           color: c.card,
           borderRadius: Radii.card,
           border: Border.all(color: c.line),
-          boxShadow: [
-            BoxShadow(color: c.brand.withValues(alpha: 0.12), blurRadius: 30, offset: const Offset(0, 12)),
-          ],
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(cat.icon, color: cat.tone(c).fg),
             const SizedBox(width: Space.xs),
-            Expanded(
-              child: Text(
-                title,
-                style: context.text.titleSmall,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            Text(title, style: context.text.titleSmall),
+            const SizedBox(width: Space.xs),
             StatusPill(status, dense: true),
           ],
         ),
@@ -134,23 +126,7 @@ class _HeroPreview extends StatelessWidget {
       builder: (context, box) => Stack(
         alignment: Alignment.center,
         children: [
-          Container(
-                width: box.maxHeight * 0.75,
-                height: box.maxHeight * 0.75,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [c.brand.withValues(alpha: 0.28), c.brand.withValues(alpha: 0)],
-                  ),
-                ),
-              )
-              .animate(onPlay: (a) => a.repeat(reverse: true))
-              .scaleXY(begin: 0.9, end: 1.05, duration: 3.seconds),
-          const SemaMark(size: 96)
-              .animate()
-              .scale(duration: Motion.slow, curve: Curves.easeOutBack)
-              .then()
-              .shimmer(duration: 1400.ms),
+          const SemaMark(size: 96).animate().scale(duration: Motion.slow, curve: Curves.easeOutBack),
           Positioned(
             top: box.maxHeight * 0.08,
             left: 0,

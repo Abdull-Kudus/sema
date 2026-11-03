@@ -25,22 +25,26 @@ class _PressableState extends State<Pressable> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTapDown: (_) => _set(true),
-      onTapUp: (_) => _set(false),
-      onTapCancel: () => _set(false),
-      onTap: widget.onTap == null
-          ? null
-          : () {
-              HapticFeedback.selectionClick();
-              widget.onTap!();
-            },
-      child: AnimatedScale(
-        scale: _down ? widget.scale : 1,
-        duration: Motion.fast,
-        curve: Curves.easeOut,
-        child: widget.child,
+    return MouseRegion(
+      // Hand cursor with a mouse or trackpad, like Material buttons.
+      cursor: widget.onTap == null ? MouseCursor.defer : SystemMouseCursors.click,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) => _set(true),
+        onTapUp: (_) => _set(false),
+        onTapCancel: () => _set(false),
+        onTap: widget.onTap == null
+            ? null
+            : () {
+                HapticFeedback.selectionClick();
+                widget.onTap!();
+              },
+        child: AnimatedScale(
+          scale: _down ? widget.scale : 1,
+          duration: Motion.fast,
+          curve: Curves.easeOut,
+          child: widget.child,
+        ),
       ),
     );
   }

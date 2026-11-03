@@ -36,7 +36,7 @@ class ReportCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         report.title,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: context.text.titleMedium,
                       ),
@@ -55,7 +55,7 @@ class ReportCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         report.fullLocation,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: context.text.bodySmall,
                       ),

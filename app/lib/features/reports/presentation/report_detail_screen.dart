@@ -186,7 +186,7 @@ class _DetailView extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: Space.md, vertical: 14),
                     child: Row(
                       children: [
-                        Icon(SolarIconsBold.usersGroupRounded, color: c.brand, size: 20),
+                        Icon(SolarIconsBold.usersGroupRounded, color: c.brandText, size: 20),
                         const SizedBox(width: Space.xs),
                         Expanded(
                           child: Text(
@@ -233,20 +233,20 @@ class _MeTooButton extends ConsumerWidget {
         decoration: BoxDecoration(
           color: on ? c.brandSoft : c.card,
           borderRadius: Radii.card,
-          border: Border.all(color: on ? c.brand : c.line),
+          border: Border.all(color: on ? c.brandText : c.line),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               on ? SolarIconsBold.like : SolarIconsOutline.like,
-              color: on ? c.brand : c.text,
+              color: on ? c.brandText : c.text,
               size: 20,
             ).animate(target: on ? 1 : 0).scaleXY(end: 1.25, duration: 120.ms).then().scaleXY(end: 0.8),
             const SizedBox(width: Space.xs),
             Text(
               on ? 'You too · ${report.upvotes}' : 'Me too · ${report.upvotes}',
-              style: context.text.titleSmall?.copyWith(color: on ? c.brand : c.text),
+              style: context.text.titleSmall?.copyWith(color: on ? c.brandText : c.text),
             ),
           ],
         ),
@@ -353,14 +353,17 @@ class _GalleryState extends State<_Gallery> {
         PageView.builder(
           itemCount: urls.length,
           onPageChanged: (i) => setState(() => _page = i),
-          itemBuilder: (context, i) => GestureDetector(
-            onTap: () => _openViewer(context, urls, i),
-            child: Hero(
-              tag: 'photo-${widget.report.id}-$i',
-              child: CachedNetworkImage(
-                imageUrl: urls[i],
-                fit: BoxFit.cover,
-                placeholder: (_, _) => ColoredBox(color: c.skeleton),
+          itemBuilder: (context, i) => MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => _openViewer(context, urls, i),
+              child: Hero(
+                tag: 'photo-${widget.report.id}-$i',
+                child: CachedNetworkImage(
+                  imageUrl: urls[i],
+                  fit: BoxFit.cover,
+                  placeholder: (_, _) => ColoredBox(color: c.skeleton),
+                ),
               ),
             ),
           ),
