@@ -4,7 +4,7 @@ import '../../../core/config/app_config.dart';
 
 enum UserRole {
   student('Student'),
-  staff('Campus staff');
+  staff('Supervisor');
 
   const UserRole(this.label);
 

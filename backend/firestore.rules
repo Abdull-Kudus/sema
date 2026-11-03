@@ -51,6 +51,7 @@ service cloud.firestore {
         && validCategory(d.category)
         && d.priority in ['low', 'medium', 'high']
         && d.location is string && d.location.size() > 0
+        && (!('spot' in d) || (d.spot is string && d.spot.size() <= 80))
         && d.photoUrls is list && d.photoUrls.size() <= 3
         && d.isAnonymous is bool;
     }
@@ -90,7 +91,7 @@ service cloud.firestore {
         (isOwner(resource.data.reporterId)
           && resource.data.status == 'submitted'
           && changedOnly(['title', 'description', 'category', 'priority', 'location',
-                          'locationDetail', 'photoUrls', 'photoPaths', 'isAnonymous', 'updatedAt'])
+                          'spot', 'locationDetail', 'photoUrls', 'photoPaths', 'isAnonymous', 'updatedAt'])
           && validReportContent(request.resource.data))
         || (isAlu()
           && changedOnly(['upvoterIds'])

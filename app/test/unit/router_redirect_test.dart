@@ -21,6 +21,21 @@ void main() {
     expect(go(Routes.verifyEmail, signedIn: true), isNull);
   });
 
+  test('a supervisor sign-in under role check stays on the portal', () {
+    expect(
+      authRedirect(
+        location: Routes.supervisorSignIn,
+        loading: false,
+        signedIn: true,
+        verified: true,
+        holding: true,
+      ),
+      isNull,
+    );
+    expect(go(Routes.supervisorSignIn, signedIn: true, verified: true), Routes.home);
+    expect(go(Routes.supervisorSignUp), isNull);
+  });
+
   test('verified users skip the auth flow', () {
     expect(go(Routes.signIn, signedIn: true, verified: true), Routes.home);
     expect(go(Routes.verifyEmail, signedIn: true, verified: true), Routes.home);

@@ -16,6 +16,12 @@ void main() {
       expect(Validators.aluEmail(''), isNotNull);
     });
 
+    test('supervisor accounts need the staff domain', () {
+      expect(Validators.staffEmail('j.doe@alueducation.com'), isNull);
+      expect(Validators.staffEmail('a.student@alustudent.com'), isNotNull);
+      expect(Validators.staffEmail('x@gmail.com'), isNotNull);
+    });
+
     test('role follows the domain', () {
       expect(UserRole.fromEmail('x@alueducation.com'), UserRole.staff);
       expect(UserRole.fromEmail('x@alustudent.com'), UserRole.student);

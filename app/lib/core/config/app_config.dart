@@ -24,20 +24,44 @@ abstract final class AppConfig {
   static const verifyPollInterval = Duration(seconds: 4);
   static const resendCooldown = Duration(seconds: 60);
 
-  /// Places on the ALU Rwanda campus a report can be pinned to.
-  static const campusLocations = [
-    'Main Building',
-    'Library',
-    'Cafeteria',
-    'Student Residence',
-    'Innovation Hub',
-    'Lecture Rooms',
-    'Sports Ground',
-    'Administration Block',
-    'Parking & Gate',
-    'Washrooms',
-    'Outdoor Areas',
+  /// Areas of the ALU Rwanda campus, each with the spots a report can be
+  /// narrowed to. Every area has its own washrooms.
+  static const campusAreas = [
+    CampusArea('Main Building', ['Reception', 'Learning Lab (Congo & Gabon)']),
+    CampusArea('Staff Area', ['Staff Work Hive', 'Administration']),
+    CampusArea('Leadership Centre', ['Eswatini']),
+    CampusArea('Resource Centre', ['Gambia', 'Liberia & Benin', 'Guinea']),
+    CampusArea('Learning Commons', ['KK']),
+    CampusArea('Enterprise Commons', [
+      'Learning Lab (Kenya, Burundi, Kilimanjaro)',
+      'Algeria, Angola, Namibia',
+      'Fab Lab',
+    ]),
+    CampusArea('Social Commons', [
+      'Learning Lab (Algeria, Egypt, Morocco, Ethiopia)',
+      'Food Court & Vendors',
+      'South Sudan, Djibouti',
+    ]),
+    CampusArea('Collab Street', ['NN']),
+    CampusArea('Campus Grounds', ['Main Gate', 'Parking', 'Outdoor Spaces'], washrooms: false),
   ];
+
+  static CampusArea? areaNamed(String name) {
+    for (final area in campusAreas) {
+      if (area.name == name) return area;
+    }
+    return null;
+  }
+}
+
+class CampusArea {
+  const CampusArea(this.name, this._spots, {this.washrooms = true});
+
+  final String name;
+  final List<String> _spots;
+  final bool washrooms;
+
+  List<String> get spots => [..._spots, if (washrooms) 'Washrooms'];
 }
 
 abstract final class Collections {

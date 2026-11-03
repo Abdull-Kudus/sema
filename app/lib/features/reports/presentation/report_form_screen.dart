@@ -34,7 +34,11 @@ class _ReportFormScreenState extends ConsumerState<ReportFormScreen> {
   late final _detail = TextEditingController(text: widget.existing?.locationDetail);
   late ReportCategory? _category = widget.existing?.category;
   late ReportPriority _priority = widget.existing?.priority ?? ReportPriority.medium;
-  late String? _location = widget.existing?.location;
+  // Reports from before the area list changed may name an area that no longer exists.
+  late String? _area = AppConfig.areaNamed(widget.existing?.location ?? '')?.name;
+  late String? _spot = AppConfig.areaNamed(_area ?? '')?.spots
+      .where((s) => s == widget.existing?.spot)
+      .firstOrNull;
   late bool _anonymous = widget.existing?.isAnonymous ?? false;
   late final List<int> _kept = [for (var i = 0; i < (widget.existing?.photoUrls.length ?? 0); i++) i];
   final List<XFile> _files = [];
@@ -69,7 +73,8 @@ class _ReportFormScreenState extends ConsumerState<ReportFormScreen> {
       description: _description.text,
       category: _category!,
       priority: _priority,
-      location: _location!,
+      location: _area!,
+      spot: _spot ?? '',
       locationDetail: _detail.text,
       isAnonymous: _anonymous,
     );
@@ -176,20 +181,55 @@ class _ReportFormScreenState extends ConsumerState<ReportFormScreen> {
               const SizedBox(height: Space.xs),
               const _Label('Where is it?'),
               DropdownButtonFormField<String>(
-                initialValue: _location,
+                initialValue: _area,
                 isExpanded: true,
+                style: context.text.bodyLarge,
                 icon: const Icon(SolarIconsOutline.altArrowDown),
                 borderRadius: Radii.card,
                 dropdownColor: c.card,
-                validator: (v) => Validators.required(v, 'Choose a location'),
+                validator: (v) => Validators.required(v, 'Choose a campus area'),
                 decoration: const InputDecoration(
-                  prefixIcon: Icon(SolarIconsOutline.mapPoint),
-                  hintText: 'Select a campus area',
+                  prefixIcon: Icon(SolarIconsOutline.buildings_2),
+                  hintText: 'Commons or area',
                 ),
                 items: [
-                  for (final l in AppConfig.campusLocations) DropdownMenuItem(value: l, child: Text(l)),
+                  for (final a in AppConfig.campusAreas) DropdownMenuItem(value: a.name, child: Text(a.name)),
                 ],
-                onChanged: (v) => _touch(() => _location = v),
+                onChanged: (v) => _touch(() {
+                  _area = v;
+                  _spot = null;
+                }),
+              ),
+              AnimatedSize(
+                duration: Motion.fast,
+                alignment: Alignment.topCenter,
+                child: _area == null
+                    ? const SizedBox(width: double.infinity)
+                    : Padding(
+                        padding: const EdgeInsets.only(top: Space.sm),
+                        child: DropdownButtonFormField<String>(
+                          // Rebuilt per area so the spot list and selection reset together.
+                          key: ValueKey(_area),
+                          initialValue: _spot,
+                          isExpanded: true,
+                          style: context.text.bodyLarge,
+                          icon: const Icon(SolarIconsOutline.altArrowDown),
+                          borderRadius: Radii.card,
+                          dropdownColor: c.card,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(SolarIconsOutline.mapPoint),
+                            hintText: 'Lab, room or spot (optional)',
+                          ),
+                          items: [
+                            for (final s in AppConfig.areaNamed(_area!)!.spots)
+                              DropdownMenuItem(
+                                value: s,
+                                child: Text(s, overflow: TextOverflow.ellipsis),
+                              ),
+                          ],
+                          onChanged: (v) => _touch(() => _spot = v),
+                        ),
+                      ),
               ),
               const SizedBox(height: Space.sm),
               TextFormField(
@@ -197,7 +237,7 @@ class _ReportFormScreenState extends ConsumerState<ReportFormScreen> {
                 textCapitalization: TextCapitalization.sentences,
                 onChanged: (_) => _dirty = true,
                 decoration: const InputDecoration(
-                  hintText: 'Room, floor or landmark (optional)',
+                  hintText: 'Floor or landmark, e.g. near the stairs (optional)',
                   prefixIcon: Icon(SolarIconsOutline.pin),
                 ),
               ),

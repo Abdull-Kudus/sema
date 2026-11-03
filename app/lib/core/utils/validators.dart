@@ -38,6 +38,16 @@ abstract final class Validators {
     return null;
   }
 
+  /// Supervisor accounts are created with the ALU staff domain only.
+  static String? staffEmail(String? v) {
+    final error = aluEmail(v);
+    if (error != null) return error;
+    if (!v!.trim().toLowerCase().endsWith('@${AppConfig.staffDomain}')) {
+      return 'Supervisor accounts use an @${AppConfig.staffDomain} email';
+    }
+    return null;
+  }
+
   static String? signInPassword(String? v) => (v == null || v.isEmpty) ? 'Enter your password' : null;
 
   static String? Function(String?) confirm(String Function() original) =>

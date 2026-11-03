@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 import '../../../core/config/app_config.dart';
+import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_tokens.dart';
 import '../../../core/theme/sema_colors.dart';
 import '../../../core/utils/validators.dart';
@@ -13,8 +14,11 @@ import '../application/auth_providers.dart';
 import '../domain/app_user.dart';
 import 'auth_widgets.dart';
 
+/// Student sign-up, or a supervisor account (staff domain only) when [supervisor] is true.
 class SignUpScreen extends ConsumerStatefulWidget {
-  const SignUpScreen({super.key});
+  const SignUpScreen({super.key, this.supervisor = false});
+
+  final bool supervisor;
 
   @override
   ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
@@ -53,9 +57,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
     final c = context.colors;
+    final supervisor = widget.supervisor;
+    final emailValidator = supervisor ? Validators.staffEmail : Validators.aluEmail;
     return AuthScaffold(
-      title: 'Join Sema',
-      subtitle: 'Use your ALU email. We will send a link to confirm it is really you.',
+      title: supervisor ? 'Supervisor account' : 'Join Sema',
+      subtitle: supervisor
+          ? 'Use your @${AppConfig.staffDomain} email. Staff accounts get supervisor access once verified.'
+          : 'Use your ALU email. We will send a link to confirm it is really you.',
       children: [
         if (state.hasError) ErrorBanner(state.error.toString()),
         Form(
@@ -79,7 +87,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ValueListenableBuilder(
                   valueListenable: _email,
                   builder: (context, value, _) {
-                    final valid = Validators.aluEmail(value.text) == null;
+                    final valid = emailValidator(value.text) == null;
                     final role = UserRole.fromEmail(value.text);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,10 +97,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           autofillHints: const [AutofillHints.email],
-                          validator: Validators.aluEmail,
+                          validator: emailValidator,
                           decoration: InputDecoration(
-                            labelText: 'ALU email',
-                            hintText: 'a.name@${AppConfig.studentDomain}',
+                            labelText: supervisor ? 'Staff email' : 'ALU email',
+                            hintText:
+                                'a.name@${supervisor ? AppConfig.staffDomain : AppConfig.studentDomain}',
                             prefixIcon: const Icon(SolarIconsOutline.letter),
                             suffixIcon: valid
                                 ? Icon(SolarIconsBold.verifiedCheck, color: c.emerald.fg)
@@ -143,7 +152,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Already joined?', style: context.text.bodyMedium?.copyWith(color: c.muted)),
-            TextButton(onPressed: () => context.pushReplacement('/sign-in'), child: const Text('Sign in')),
+            TextButton(
+              onPressed: () => context.pushReplacement(supervisor ? Routes.supervisorSignIn : Routes.signIn),
+              child: const Text('Sign in'),
+            ),
           ],
         ),
       ],
