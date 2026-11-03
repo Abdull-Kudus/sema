@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 import '../../../core/config/app_config.dart';
+import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_tokens.dart';
 import '../../../core/theme/sema_colors.dart';
 import '../../../core/widgets/chips.dart';
@@ -61,12 +62,26 @@ class WelcomeScreen extends ConsumerWidget {
                 child: const Text('I already have an account'),
               ),
               const SizedBox(height: Space.xs),
-              TextButton.icon(
-                onPressed: loading
-                    ? null
-                    : () => ref.read(authControllerProvider.notifier).signInWithGoogle(),
-                icon: const Icon(SolarIconsBold.squareAcademicCap, size: 18),
-                label: const Text('Continue with ALU Google'),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton.icon(
+                      onPressed: loading
+                          ? null
+                          : () => ref.read(authControllerProvider.notifier).signInWithGoogle(),
+                      icon: const Icon(SolarIconsBold.squareAcademicCap, size: 18),
+                      label: const Text('ALU Google'),
+                    ),
+                  ),
+                  Container(width: 1, height: 20, color: c.line),
+                  Expanded(
+                    child: TextButton.icon(
+                      onPressed: () => context.push(Routes.supervisorSignIn),
+                      icon: const Icon(SolarIconsBold.shieldUser, size: 18),
+                      label: const Text('Supervisor portal'),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: Space.sm),
             ],
