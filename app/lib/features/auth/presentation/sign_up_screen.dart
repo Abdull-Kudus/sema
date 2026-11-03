@@ -131,8 +131,16 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   autofillHints: const [AutofillHints.newPassword],
                   onChanged: (v) => setState(() => _strength = Validators.passwordStrength(v)),
                 ),
-                const SizedBox(height: Space.xs),
-                PasswordStrength(score: _strength),
+                // Shown once typing starts, so an empty field is not labelled "Weak".
+                AnimatedSize(
+                  duration: Motion.fast,
+                  child: _password.text.isEmpty
+                      ? const SizedBox(width: double.infinity)
+                      : Padding(
+                          padding: const EdgeInsets.only(top: Space.xs),
+                          child: PasswordStrength(score: _strength),
+                        ),
+                ),
                 const SizedBox(height: Space.md),
                 PasswordField(
                   controller: _confirm,
