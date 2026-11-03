@@ -76,7 +76,7 @@ class StudentHome extends ConsumerWidget {
               ? SemaCard(
                   child: Row(
                     children: [
-                      Icon(SolarIconsBold.confetti, color: c.brand, size: 32),
+                      Icon(SolarIconsBold.confetti, color: c.brandText, size: 32),
                       const SizedBox(width: Space.sm),
                       Expanded(
                         child: Text(
@@ -143,15 +143,15 @@ class _ReportHero extends StatelessWidget {
                     decoration: BoxDecoration(color: c.card, borderRadius: Radii.card),
                     child: Row(
                       children: [
-                        Icon(SolarIconsBold.addCircle, color: c.brand),
+                        Icon(SolarIconsBold.addCircle, color: c.brandText),
                         const SizedBox(width: Space.xs),
                         Expanded(
                           child: Text(
                             'Report an issue',
-                            style: context.text.titleMedium?.copyWith(color: c.brand),
+                            style: context.text.titleMedium?.copyWith(color: c.brandText),
                           ),
                         ),
-                        Icon(SolarIconsOutline.altArrowRight, color: c.brand),
+                        Icon(SolarIconsOutline.altArrowRight, color: c.brandText),
                       ],
                     ),
                   ),
@@ -247,14 +247,19 @@ class _TrendingCard extends StatelessWidget {
               children: [
                 CategoryBadge(report.category, size: 32),
                 const Spacer(),
-                Icon(SolarIconsBold.usersGroupRounded, size: 16, color: c.brand),
+                Icon(SolarIconsBold.usersGroupRounded, size: 16, color: c.brandText),
                 const SizedBox(width: 4),
-                Text('${report.upvotes}', style: context.text.titleSmall?.copyWith(color: c.brand)),
+                Text('${report.upvotes}', style: context.text.titleSmall?.copyWith(color: c.brandText)),
               ],
             ),
             const Spacer(),
             Text(report.title, style: context.text.titleSmall, maxLines: 2, overflow: TextOverflow.ellipsis),
-            Text(report.location, style: context.text.bodySmall, maxLines: 1),
+            Text(
+              report.location,
+              style: context.text.bodySmall,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ],
         ),
       ),

@@ -25,7 +25,7 @@ class HomeHeader extends ConsumerWidget {
     final unread = ref.watch(unreadCountProvider);
     return Row(
       children: [
-        GestureDetector(
+        Pressable(
           onTap: () => context.go('/profile'),
           child: Hero(
             tag: 'me-avatar',
@@ -102,7 +102,7 @@ class StatTile extends StatelessWidget {
           ),
           const SizedBox(height: Space.sm),
           AnimatedCount(value: value, style: context.text.headlineLarge),
-          Text(label, style: context.text.labelMedium?.copyWith(color: context.colors.muted), maxLines: 1),
+          Text(label, style: context.text.labelMedium?.copyWith(color: context.colors.muted), maxLines: 2),
         ],
       ),
     );

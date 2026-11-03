@@ -73,7 +73,8 @@ class _Dot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final dot = AnimatedContainer(
+    // The current step is marked with a page-coloured inner ring rather than a glow.
+    return AnimatedContainer(
       duration: Motion.medium,
       width: 34,
       height: 34,
@@ -82,17 +83,16 @@ class _Dot extends StatelessWidget {
         color: done ? tone.fg : c.panel,
         border: Border.all(color: done ? tone.fg : c.line, width: 2),
       ),
-      child: Icon(icon, size: 16, color: done ? c.page : c.muted),
+      child: Container(
+        decoration: active
+            ? BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: c.page, width: 2),
+              )
+            : null,
+        child: Icon(icon, size: 16, color: done ? c.page : c.muted),
+      ),
     );
-    if (!active) return dot;
-    return dot
-        .animate(onPlay: (ctl) => ctl.repeat(reverse: true))
-        .boxShadow(
-          duration: 1200.ms,
-          begin: BoxShadow(color: tone.fg.withValues(alpha: 0), blurRadius: 0),
-          end: BoxShadow(color: tone.fg.withValues(alpha: 0.45), blurRadius: 14, spreadRadius: 2),
-          borderRadius: BorderRadius.circular(17),
-        );
   }
 }
 

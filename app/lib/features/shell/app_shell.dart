@@ -7,6 +7,7 @@ import 'package:solar_icons/solar_icons.dart';
 
 import '../../core/theme/app_tokens.dart';
 import '../../core/theme/sema_colors.dart';
+import '../../core/widgets/pressable.dart';
 import '../notifications/application/notification_providers.dart';
 
 /// Bottom navigation around the four tab branches, with the "Report" action
@@ -50,7 +51,7 @@ class AppShell extends ConsumerWidget {
                   child: Icon(
                     selected ? active : icon,
                     key: ValueKey(selected),
-                    color: selected ? c.brand : c.muted,
+                    color: selected ? c.brandText : c.muted,
                     size: 24,
                   ),
                 ),
@@ -59,7 +60,7 @@ class AppShell extends ConsumerWidget {
               Text(
                 label,
                 style: context.text.labelMedium?.copyWith(
-                  color: selected ? c.brand : c.muted,
+                  color: selected ? c.brandText : c.muted,
                   fontSize: 11.5,
                 ),
               ),
@@ -109,7 +110,7 @@ class _ReportButton extends StatelessWidget {
     return Semantics(
       button: true,
       label: 'Report an issue',
-      child: GestureDetector(
+      child: Pressable(
         onTap: () {
           HapticFeedback.mediumImpact();
           onTap();
@@ -117,13 +118,7 @@ class _ReportButton extends StatelessWidget {
         child: Container(
           width: 54,
           height: 54,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: c.hero,
-            boxShadow: [
-              BoxShadow(color: c.brand.withValues(alpha: 0.4), blurRadius: 18, offset: const Offset(0, 6)),
-            ],
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, gradient: c.hero),
           child: Icon(SolarIconsOutline.addCircle, color: c.onBrand, size: 28),
         ),
       ).animate().scale(delay: 200.ms, duration: Motion.medium, curve: Curves.easeOutBack),
