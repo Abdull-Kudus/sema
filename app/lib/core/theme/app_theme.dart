@@ -42,7 +42,10 @@ abstract final class AppTheme {
       textTheme: text,
       scaffoldBackgroundColor: c.page,
       extensions: [c],
-      splashFactory: InkSparkle.splashFactory,
+      // Flat design: plain ripples and no shadows anywhere, so surfaces are
+      // separated by borders and colour, never by elevation.
+      splashFactory: InkRipple.splashFactory,
+      shadowColor: Colors.transparent,
       appBarTheme: AppBarTheme(
         backgroundColor: c.page,
         foregroundColor: c.text,
@@ -86,7 +89,7 @@ abstract final class AppTheme {
           minimumSize: const Size.fromHeight(54),
           textStyle: text.titleSmall,
           shape: const RoundedRectangleBorder(borderRadius: Radii.card),
-        ),
+        ).copyWith(elevation: _flat),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
@@ -95,10 +98,13 @@ abstract final class AppTheme {
           side: BorderSide(color: c.line),
           textStyle: text.titleSmall,
           shape: const RoundedRectangleBorder(borderRadius: Radii.card),
-        ),
+        ).copyWith(elevation: _flat),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: c.brand, textStyle: text.labelLarge),
+        style: TextButton.styleFrom(
+          foregroundColor: c.brandText,
+          textStyle: text.labelLarge,
+        ).copyWith(elevation: _flat),
       ),
       chipTheme: ChipThemeData(
         backgroundColor: c.panel,
@@ -108,6 +114,8 @@ abstract final class AppTheme {
         secondaryLabelStyle: text.labelMedium?.copyWith(color: c.onBrand),
         shape: const StadiumBorder(),
         showCheckmark: false,
+        elevation: 0,
+        pressElevation: 0,
         padding: const EdgeInsets.symmetric(horizontal: Space.xs, vertical: 6),
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
@@ -118,11 +126,13 @@ abstract final class AppTheme {
           foregroundColor: c.text,
           side: BorderSide(color: c.line),
           textStyle: text.labelLarge,
-        ),
+        ).copyWith(elevation: _flat),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: c.card,
         surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        modalElevation: 0,
         showDragHandle: true,
         dragHandleColor: c.line,
         shape: const RoundedRectangleBorder(
@@ -132,6 +142,7 @@ abstract final class AppTheme {
       dialogTheme: DialogThemeData(
         backgroundColor: c.card,
         surfaceTintColor: Colors.transparent,
+        elevation: 0,
         shape: const RoundedRectangleBorder(borderRadius: Radii.panel),
         titleTextStyle: text.titleLarge,
         contentTextStyle: text.bodyMedium?.copyWith(color: c.muted),
@@ -139,8 +150,23 @@ abstract final class AppTheme {
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: c.text,
+        elevation: 0,
         contentTextStyle: text.bodyMedium?.copyWith(color: c.page),
         shape: const RoundedRectangleBorder(borderRadius: Radii.card),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: c.card,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        textStyle: text.bodyLarge,
+        shape: RoundedRectangleBorder(
+          borderRadius: Radii.card,
+          side: BorderSide(color: c.line),
+        ),
+      ),
+      tooltipTheme: TooltipThemeData(
+        decoration: BoxDecoration(color: c.text, borderRadius: BorderRadius.circular(Radii.sm)),
+        textStyle: text.bodySmall?.copyWith(color: c.page),
       ),
       switchTheme: SwitchThemeData(trackOutlineColor: WidgetStatePropertyAll(c.line)),
       progressIndicatorTheme: ProgressIndicatorThemeData(color: c.brand, linearTrackColor: c.brandSoft),
@@ -152,6 +178,8 @@ abstract final class AppTheme {
       ),
     );
   }
+
+  static const _flat = WidgetStatePropertyAll<double>(0);
 
   static TextTheme _textTheme(SemaColors c) {
     TextStyle s(double size, FontWeight weight, {double height = 1.3, double spacing = 0, Color? color}) =>

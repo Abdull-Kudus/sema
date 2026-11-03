@@ -10,6 +10,7 @@ import '../../../../core/config/app_config.dart';
 import '../../../../core/theme/app_tokens.dart';
 import '../../../../core/theme/sema_colors.dart';
 import '../../../../core/widgets/feedback.dart';
+import '../../../../core/widgets/pressable.dart';
 
 /// Up to [AppConfig.maxPhotos] photos: already-uploaded ones (by URL) plus
 /// newly picked files.
@@ -92,7 +93,7 @@ class PhotoPicker extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(SolarIconsOutline.cameraAdd, color: c.brand, size: 30),
+              Icon(SolarIconsOutline.cameraAdd, color: c.brandText, size: 30),
               const SizedBox(height: Space.xs),
               Text('Add photos', style: context.text.titleSmall),
               Text(
@@ -127,7 +128,7 @@ class PhotoPicker extends StatelessWidget {
                   borderRadius: Radii.card,
                   border: Border.all(color: c.line),
                 ),
-                child: Icon(SolarIconsOutline.addCircle, color: c.brand),
+                child: Icon(SolarIconsOutline.addCircle, color: c.brandText),
               ),
             ),
         ],
@@ -154,7 +155,7 @@ class _Tile extends StatelessWidget {
         Positioned(
           top: 4,
           right: 4,
-          child: GestureDetector(
+          child: Pressable(
             onTap: onRemove,
             child: Container(
               padding: const EdgeInsets.all(4),

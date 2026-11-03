@@ -43,7 +43,7 @@ class EmptyState extends StatelessWidget {
               width: 84,
               height: 84,
               decoration: BoxDecoration(color: c.brandSoft, shape: BoxShape.circle),
-              child: Icon(icon, size: 38, color: c.brand),
+              child: Icon(icon, size: 38, color: c.brandText),
             ).animate().scale(duration: Motion.medium, curve: Curves.easeOutBack),
             const SizedBox(height: Space.md),
             Text(title, style: context.text.titleLarge, textAlign: TextAlign.center),

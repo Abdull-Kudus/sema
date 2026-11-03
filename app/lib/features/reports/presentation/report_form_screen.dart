@@ -184,6 +184,7 @@ class _ReportFormScreenState extends ConsumerState<ReportFormScreen> {
                 initialValue: _area,
                 isExpanded: true,
                 style: context.text.bodyLarge,
+                elevation: 0,
                 icon: const Icon(SolarIconsOutline.altArrowDown),
                 borderRadius: Radii.card,
                 dropdownColor: c.card,
@@ -213,6 +214,7 @@ class _ReportFormScreenState extends ConsumerState<ReportFormScreen> {
                           initialValue: _spot,
                           isExpanded: true,
                           style: context.text.bodyLarge,
+                          elevation: 0,
                           icon: const Icon(SolarIconsOutline.altArrowDown),
                           borderRadius: Radii.card,
                           dropdownColor: c.card,
@@ -273,7 +275,7 @@ class _ReportFormScreenState extends ConsumerState<ReportFormScreen> {
                 child: SwitchListTile(
                   value: _anonymous,
                   onChanged: (v) => _touch(() => _anonymous = v),
-                  secondary: Icon(SolarIconsBold.incognito, color: c.brand),
+                  secondary: Icon(SolarIconsBold.incognito, color: c.brandText),
                   title: Text('Report anonymously', style: context.text.titleSmall),
                   subtitle: Text(
                     'Other students will not see your name. Campus staff can still follow up to prevent misuse.',
@@ -373,9 +375,6 @@ class _CategoryTile extends StatelessWidget {
           color: selected ? null : c.panel,
           borderRadius: Radii.card,
           border: Border.all(color: selected ? Colors.transparent : c.line),
-          boxShadow: selected
-              ? [BoxShadow(color: c.brand.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))]
-              : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
