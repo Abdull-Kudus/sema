@@ -52,6 +52,16 @@ Firebase directly.
 - **Alerts** inbox with unread badge, swipe to dismiss.
 - **Light / dark / system theme**, Clash Grotesk type, Solar icons, motion via `flutter_animate`.
 
+## Demo supervisor account
+
+For the demo there is a seeded staff account, `supervisor.demo@alueducation.com`, created with
+`firebase auth:import` and marked as verified (it has no real mailbox). Sign in from
+**Welcome → Supervisor portal**. Its password is kept only in `backend/seed/demo-supervisor.local.md`,
+which git ignores.
+
+It is ordinary data in Firebase Auth, not a code path: real staff (`@alueducation.com`) and
+students (`@alustudent.com`) register, verify their email and sign in exactly as before.
+
 ## Firestore data model
 
 ```

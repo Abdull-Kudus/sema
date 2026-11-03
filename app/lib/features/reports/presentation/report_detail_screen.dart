@@ -129,7 +129,7 @@ class _DetailView extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: Space.sm),
-                PriorityPill(report.priority),
+                Align(alignment: Alignment.centerLeft, child: PriorityPill(report.priority)),
                 const SizedBox(height: Space.md),
                 _Reporter(report: report, isStaff: isStaff),
                 const SizedBox(height: Space.lg),
