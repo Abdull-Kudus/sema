@@ -126,14 +126,19 @@ class GrowBar extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(child: ColoredBox(color: track ?? context.colors.panel)),
-            TweenAnimationBuilder<double>(
-              tween: Tween(begin: 0, end: fraction.clamp(0, 1)),
-              duration: Motion.counter,
-              curve: Curves.easeOutCubic,
-              builder: (_, v, _) => FractionallySizedBox(
-                widthFactor: v,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(Radii.pill)),
+            // Positioned.fill gives the fill the bar's full height; a bare Stack child would be 0px tall.
+            Positioned.fill(
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: fraction.clamp(0, 1)),
+                duration: Motion.counter,
+                curve: Curves.easeOutCubic,
+                builder: (_, v, _) => FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: v,
+                  heightFactor: 1,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(Radii.pill)),
+                  ),
                 ),
               ),
             ),
