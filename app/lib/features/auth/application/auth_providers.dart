@@ -43,6 +43,27 @@ class AuthController extends AsyncNotifier<void> {
 
   Future<bool> signInWithGoogle() => _run(() => ref.read(authRepositoryProvider).signInWithGoogle());
 
+  /// Supervisor portal sign-in: authenticates, then refuses non-staff accounts.
+  Future<bool> signInAsSupervisor(String email, String password) =>
+      _supervisor(() => ref.read(authRepositoryProvider).signIn(email: email, password: password));
+
+  Future<bool> signInWithGoogleAsSupervisor() =>
+      _supervisor(() => ref.read(authRepositoryProvider).signInWithGoogle());
+
+  /// Holds routing on the portal until the role check is done, so a refused
+  /// account never flashes the home screen.
+  Future<bool> _supervisor(Future<void> Function() signIn) async {
+    final hold = ref.read(authHoldProvider.notifier)..set(true);
+    try {
+      return await _run(() async {
+        await signIn();
+        await ref.read(authRepositoryProvider).requireStaff();
+      });
+    } finally {
+      hold.set(false);
+    }
+  }
+
   Future<bool> sendPasswordReset(String email) =>
       _run(() => ref.read(authRepositoryProvider).sendPasswordReset(email));
 
@@ -52,3 +73,13 @@ class AuthController extends AsyncNotifier<void> {
 }
 
 final authControllerProvider = AsyncNotifierProvider<AuthController, void>(AuthController.new);
+
+/// True while a sign-in is still being checked; the router stays put meanwhile.
+class AuthHold extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void set(bool value) => state = value;
+}
+
+final authHoldProvider = NotifierProvider<AuthHold, bool>(AuthHold.new);

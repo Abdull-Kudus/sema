@@ -27,10 +27,12 @@ abstract final class Routes {
   static const signIn = '/sign-in';
   static const signUp = '/sign-up';
   static const forgotPassword = '/forgot-password';
+  static const supervisorSignIn = '/supervisor';
+  static const supervisorSignUp = '/supervisor/sign-up';
   static const verifyEmail = '/verify-email';
   static const home = '/home';
 
-  static const public = {welcome, signIn, signUp, forgotPassword};
+  static const public = {welcome, signIn, signUp, forgotPassword, supervisorSignIn, supervisorSignUp};
 }
 
 final _rootKey = GlobalKey<NavigatorState>();
@@ -42,8 +44,11 @@ String? authRedirect({
   required bool loading,
   required bool signedIn,
   required bool verified,
+  bool holding = false,
 }) {
   if (loading) return location == Routes.splash ? null : Routes.splash;
+  // A supervisor sign-in is still being role-checked: stay on the auth screen.
+  if (holding && Routes.public.contains(location)) return null;
   if (!signedIn) return Routes.public.contains(location) ? null : Routes.welcome;
   if (!verified) return location == Routes.verifyEmail ? null : Routes.verifyEmail;
   final inAuthFlow =
@@ -54,6 +59,7 @@ String? authRedirect({
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier(0);
   ref.listen(authUserProvider, (_, _) => refresh.value++);
+  ref.listen(authHoldProvider, (_, _) => refresh.value++);
   ref.onDispose(refresh.dispose);
 
   return GoRouter(
@@ -68,6 +74,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         loading: !auth.hasValue,
         signedIn: user != null,
         verified: user?.emailVerified ?? false,
+        holding: ref.read(authHoldProvider),
       );
     },
     routes: [
@@ -76,6 +83,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.signIn, builder: (_, _) => const SignInScreen()),
       GoRoute(path: Routes.signUp, builder: (_, _) => const SignUpScreen()),
       GoRoute(path: Routes.forgotPassword, builder: (_, _) => const ForgotPasswordScreen()),
+      GoRoute(path: Routes.supervisorSignIn, builder: (_, _) => const SignInScreen(supervisor: true)),
+      GoRoute(path: Routes.supervisorSignUp, builder: (_, _) => const SignUpScreen(supervisor: true)),
       GoRoute(path: Routes.verifyEmail, builder: (_, _) => const VerifyEmailScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => AppShell(shell: shell),

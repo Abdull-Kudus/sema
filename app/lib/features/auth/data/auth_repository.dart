@@ -95,6 +95,23 @@ class AuthRepository {
     }
   }
 
+  /// Gate for the supervisor portal. Lets the signed-in user through if they
+  /// are staff: an @alueducation.com account, or a verified account whose
+  /// profile an admin set to role "staff". Anyone else is signed out.
+  Future<void> requireStaff() async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    if (UserRole.fromEmail(user.email ?? '') == UserRole.staff) return;
+    if (user.emailVerified) {
+      final profile = await _profile(user.uid).get();
+      if (profile.data()?['role'] == UserRole.staff.name) return;
+    }
+    await signOut();
+    throw const AuthFailure(
+      'This account does not have supervisor access. Students sign in from the main screen.',
+    );
+  }
+
   Future<void> sendVerificationEmail() async {
     try {
       await _auth.currentUser?.sendEmailVerification();
