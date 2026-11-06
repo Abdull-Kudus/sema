@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +12,7 @@ import '../features/reports/data/report_repository.dart';
 /// Infrastructure providers. Tests override these with fakes.
 final firebaseAuthProvider = Provider<FirebaseAuth>((_) => FirebaseAuth.instance);
 final firestoreProvider = Provider<FirebaseFirestore>((_) => FirebaseFirestore.instance);
-final storageProvider = Provider<FirebaseStorage>((_) => FirebaseStorage.instance);
+final storageProvider = Provider<SupabaseStorageClient>((_) => Supabase.instance.client.storage);
 
 /// Overridden in main() once SharedPreferences has loaded.
 final sharedPreferencesProvider = Provider<SharedPreferences>(

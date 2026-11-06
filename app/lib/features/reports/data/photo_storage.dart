@@ -1,5 +1,5 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/config/app_config.dart';
 
@@ -10,11 +10,17 @@ class UploadedPhoto {
   final String path;
 }
 
-/// Compresses and uploads photos to Firebase Storage.
+/// Compresses photos and stores them in Supabase Storage.
+///
+/// Every request carries the user's Firebase ID token (see main.dart), and the
+/// bucket's policies only let a verified ALU user write under their own uid
+/// (backend/supabase/storage.sql).
 class PhotoStorage {
   PhotoStorage(this._storage);
 
-  final FirebaseStorage _storage;
+  final SupabaseStorageClient _storage;
+
+  StorageFileApi get _bucket => _storage.from(AppConfig.photoBucket);
 
   Future<UploadedPhoto> uploadReportPhoto({
     required String uid,
@@ -23,13 +29,21 @@ class PhotoStorage {
     void Function(double progress)? onProgress,
   }) {
     final name = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-    return _upload('reports/$uid/$reportId/$name', file, onProgress);
+    return _upload('reports/$uid/$reportId/$name', file, onProgress: onProgress);
   }
 
-  Future<UploadedPhoto> uploadAvatar({required String uid, required XFile file}) =>
-      _upload('avatars/$uid/avatar.jpg', file, null);
+  /// Avatars keep one path, so the URL carries a version to bypass image caches.
+  Future<UploadedPhoto> uploadAvatar({required String uid, required XFile file}) async {
+    final photo = await _upload('avatars/$uid/avatar.jpg', file, overwrite: true);
+    return UploadedPhoto('${photo.url}?v=${DateTime.now().millisecondsSinceEpoch}', photo.path);
+  }
 
-  Future<UploadedPhoto> _upload(String path, XFile file, void Function(double progress)? onProgress) async {
+  Future<UploadedPhoto> _upload(
+    String path,
+    XFile file, {
+    bool overwrite = false,
+    void Function(double progress)? onProgress,
+  }) async {
     final bytes =
         await FlutterImageCompress.compressWithFile(
           file.path,
@@ -39,27 +53,21 @@ class PhotoStorage {
         ) ??
         await file.readAsBytes();
 
-    final ref = _storage.ref(path);
-    final task = ref.putData(bytes, SettableMetadata(contentType: 'image/jpeg'));
-    final sub = task.snapshotEvents.listen((s) {
-      if (s.totalBytes > 0) onProgress?.call(s.bytesTransferred / s.totalBytes);
-    });
-    try {
-      await task;
-    } finally {
-      await sub.cancel();
-    }
-    return UploadedPhoto(await ref.getDownloadURL(), path);
+    // Supabase uploads in one request, so progress moves per photo, not per byte.
+    onProgress?.call(0);
+    await _bucket.uploadBinary(
+      path,
+      bytes,
+      fileOptions: FileOptions(contentType: 'image/jpeg', upsert: overwrite),
+    );
+    onProgress?.call(1);
+    return UploadedPhoto(_bucket.getPublicUrl(path), path);
   }
 
+  /// Removing a file that is already gone is not an error in Supabase.
   Future<void> deleteAll(Iterable<String> paths) async {
-    for (final path in paths) {
-      try {
-        await _storage.ref(path).delete();
-      } on FirebaseException catch (e) {
-        // Already gone is fine; anything else should surface.
-        if (e.code != 'object-not-found') rethrow;
-      }
-    }
+    final list = paths.toList();
+    if (list.isEmpty) return;
+    await _bucket.remove(list);
   }
 }

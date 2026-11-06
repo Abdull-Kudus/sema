@@ -20,6 +20,14 @@ abstract final class AppConfig {
   static const descriptionMax = 1000;
   static const passwordMin = 8;
 
+  // Supabase Storage holds photos (Firebase Storage needs a paid plan). These two
+  // values are public by design, like the Firebase config: access is enforced by
+  // the bucket policies in backend/supabase/storage.sql. Never put the
+  // service_role key in the app.
+  static const supabaseUrl = 'https://zytiomskeexcgwjkjicz.supabase.co';
+  static const supabasePublishableKey = 'sb_publishable_LzkqBIYydhyucDSrUH54gw_PmSCf4bk';
+  static const photoBucket = 'photos';
+
   static const feedLimit = 200;
   static const verifyPollInterval = Duration(seconds: 4);
   static const resendCooldown = Duration(seconds: 60);
