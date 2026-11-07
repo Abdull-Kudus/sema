@@ -1,0 +1,22 @@
+@startuml report-activity
+!theme plain
+title Student reports an issue
+start
+:Tap Report;
+:Choose category, title, description;
+:Choose area -> spot, add detail;
+:Set priority, optional anonymous;
+if (Add photos?) then (yes)
+  :Pick / take up to 3 photos;
+  :Compress on device;
+endif
+:Validate form;
+if (Valid?) then (no)
+  :Show field errors;
+  stop
+endif
+:Upload photos to Supabase\nreports/{uid}/{reportId}/;
+:Batch write report + first history entry;
+:Report appears in feed and My reports\n(status: Submitted);
+stop
+@enduml

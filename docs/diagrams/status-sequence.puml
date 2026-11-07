@@ -1,0 +1,19 @@
+@startuml status-sequence
+!theme plain
+title Supervisor updates a report status
+actor Supervisor
+participant "ReportDetail\nscreen" as UI
+participant "ReportActions\n(Riverpod)" as N
+participant ReportRepository as R
+database Firestore as FS
+actor Student
+Supervisor -> UI : pick status + note
+UI -> N : changeStatus(report, status, note)
+N -> R : changeStatus(...)
+R -> FS : batch: update report\n+ add updates entry\n+ add reporter notification
+FS -> FS : rules: isStaff(), only status fields
+FS --> R : commit OK
+FS --> Student : snapshot stream:\nnew alert + timeline step
+R --> N : done
+N --> UI : toast "Status updated"
+@enduml
