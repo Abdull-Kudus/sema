@@ -49,6 +49,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     widget.supervisor
         ? await auth.signInAsSupervisor(_email.text, _password.text)
         : await auth.signIn(_email.text, _password.text);
+    // Lets Android offer to save the login, so it can be picked next time.
+    if (mounted && !ref.read(authControllerProvider).hasError) TextInput.finishAutofillContext();
   }
 
   void _google() {
