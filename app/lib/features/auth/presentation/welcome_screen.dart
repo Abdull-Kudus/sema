@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,9 +83,38 @@ class WelcomeScreen extends ConsumerWidget {
 }
 
 /// An original, flat illustration: the Sema mark at the centre of two rings,
-/// with the kinds of issue students report placed around it.
-class _CampusIllustration extends StatelessWidget {
+/// with the kinds of issue students report slowly orbiting it. The orbit
+/// stops when the phone asks apps to reduce motion.
+class _CampusIllustration extends StatefulWidget {
   const _CampusIllustration();
+
+  @override
+  State<_CampusIllustration> createState() => _CampusIllustrationState();
+}
+
+class _CampusIllustrationState extends State<_CampusIllustration> with SingleTickerProviderStateMixin {
+  static const _orbit = [
+    ReportCategory.water,
+    ReportCategory.electricity,
+    ReportCategory.internet,
+    ReportCategory.safety,
+    ReportCategory.sanitation,
+    ReportCategory.furniture,
+  ];
+
+  late final _spin = AnimationController(vsync: this, duration: Motion.orbit);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MediaQuery.disableAnimationsOf(context) ? _spin.stop() : _spin.repeat();
+  }
+
+  @override
+  void dispose() {
+    _spin.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +122,9 @@ class _CampusIllustration extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, box) {
         final size = (box.maxHeight < box.maxWidth ? box.maxHeight : box.maxWidth).clamp(160.0, 300.0);
-        final badge = size * 0.19;
+        final badge = size * 0.15;
+        // Badges travel between the inner and outer ring.
+        final radius = size * 0.41;
         Widget ring(double f) => Container(
           width: size * f,
           height: size * f,
@@ -101,14 +134,6 @@ class _CampusIllustration extends StatelessWidget {
             border: Border.all(color: c.line),
           ),
         );
-        Widget at(double dx, double dy, ReportCategory cat, int i) => Align(
-          alignment: Alignment(dx, dy),
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(color: c.page, borderRadius: BorderRadius.circular(badge * 0.4)),
-            child: CategoryBadge(cat, size: badge),
-          ).animate().fadeIn(delay: Motion.stagger * (i + 2)).scaleXY(begin: 0.8, curve: Curves.easeOutBack),
-        );
         return SizedBox.square(
           dimension: size,
           child: Stack(
@@ -117,10 +142,30 @@ class _CampusIllustration extends StatelessWidget {
               ring(1),
               ring(0.66),
               SemaMark(size: size * 0.3).animate().scale(duration: Motion.slow, curve: Curves.easeOutBack),
-              at(-0.92, -0.62, ReportCategory.water, 0),
-              at(0.92, -0.62, ReportCategory.electricity, 1),
-              at(-0.92, 0.62, ReportCategory.internet, 2),
-              at(0.92, 0.62, ReportCategory.safety, 3),
+              // One builder moves every badge; each stays upright as it circles.
+              AnimatedBuilder(
+                animation: _spin,
+                builder: (context, _) => Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    for (final (i, cat) in _orbit.indexed)
+                      Transform.translate(
+                        offset: Offset.fromDirection(
+                          (_spin.value + i / _orbit.length) * 2 * math.pi - math.pi / 2,
+                          radius,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: c.page,
+                            borderRadius: BorderRadius.circular(badge * 0.4),
+                          ),
+                          child: CategoryBadge(cat, size: badge),
+                        ),
+                      ),
+                  ],
+                ),
+              ).animate().fadeIn(delay: Motion.stagger * 3, duration: Motion.slow),
             ],
           ),
         );
