@@ -1,0 +1,37 @@
+@startuml usecase
+!theme plain
+left to right direction
+title Sema — use cases
+actor Student
+actor "Supervisor / Staff" as Staff
+rectangle Sema {
+  usecase "Sign up / sign in\n(ALU email, verified)" as UC1
+  usecase "Continue with Google" as UC2
+  usecase "Report an issue\n(category, area, spot, photos)" as UC3
+  usecase "Edit / delete own report" as UC4
+  usecase "Browse & filter campus feed" as UC5
+  usecase "\"Me too\" upvote" as UC6
+  usecase "Track status timeline" as UC7
+  usecase "Receive status alerts" as UC8
+  usecase "Manage profile & photo" as UC9
+  usecase "Supervisor portal sign-in\n(staff role check)" as UC10
+  usecase "Update status with note" as UC11
+  usecase "View all reports & stats" as UC12
+}
+Student --> UC1
+Student --> UC2
+Student --> UC3
+Student --> UC4
+Student --> UC5
+Student --> UC6
+Student --> UC7
+Student --> UC8
+Student --> UC9
+Staff --> UC10
+Staff --> UC5
+Staff --> UC11
+Staff --> UC12
+Staff --> UC7
+UC11 ..> UC8 : <<triggers>>
+UC3 ..> UC1 : <<requires>>
+@enduml
