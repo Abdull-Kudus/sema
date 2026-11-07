@@ -56,8 +56,7 @@ Firebase directly.
 
 For the demo there is a seeded staff account, `supervisor.demo@alueducation.com`, created with
 `firebase auth:import` and marked as verified (it has no real mailbox). Sign in from
-**Welcome → Supervisor portal**. Its password is kept only in `backend/seed/demo-supervisor.local.md`,
-which git ignores.
+**Welcome → Supervisor portal**. Its password is kept outside the repository.
 
 It is ordinary data in Firebase Auth, not a code path: real staff (`@alueducation.com`) and
 students (`@alustudent.com`) register, verify their email and sign in exactly as before.
@@ -96,11 +95,7 @@ Users install the new APK over the old one, and their data is kept because it li
 
 ## Diagrams
 
-The PlantUML sources are in `docs/diagrams/`: ERD, use cases, architecture, the status-update sequence and the report activity flow. To render them to PNG, run `java -jar plantuml.jar -tpng docs/diagrams/*.puml` (get the jar from plantuml.com), or use the VS Code PlantUML extension.
-
-## Demo data
-
-`node backend/seed/seed.mjs` seeds 8 realistic reports with openly licensed photos (credits in `backend/seed/PHOTO-CREDITS.md`), their status history and the students' alerts. It reads the demo passwords from gitignored `*.local.md` files.
+The ERD, use case, architecture, status-update sequence and report activity diagrams were generated with PlantUML and are in `docs/diagrams/` as PNGs.
 
 ## Run it
 
