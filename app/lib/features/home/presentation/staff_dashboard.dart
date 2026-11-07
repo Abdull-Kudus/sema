@@ -164,7 +164,8 @@ class _KpiHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final onHero = c.onBrand;
-    final faded = onHero.withValues(alpha: 0.8);
+    // Secondary lines stay fully opaque: faded white on the gradient read as blurry.
+    final faded = onHero;
     return SemaCard(
       gradient: c.hero,
       borderRadius: Radii.panel,

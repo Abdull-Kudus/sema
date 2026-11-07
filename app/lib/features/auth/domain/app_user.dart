@@ -34,8 +34,6 @@ class AppUser {
 
   bool get isStaff => role == UserRole.staff;
 
-  String get firstName => name.trim().split(RegExp(r'\s+')).first;
-
   factory AppUser.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
     final d = doc.data() ?? const {};
     final email = d['email'] as String? ?? '';

@@ -39,6 +39,6 @@ void main() {
     (t) => _render(t, 'icon.png', canvas: 1024, mark: 680, background: SemaColors.light.page),
   );
   // Adaptive icons crop to the inner 66%, so the foreground mark is smaller.
-  testWidgets('adaptive foreground', (t) => _render(t, 'icon_foreground.png', canvas: 1024, mark: 520));
+  testWidgets('adaptive foreground', (t) => _render(t, 'icon_foreground.png', canvas: 1024, mark: 440));
   testWidgets('splash', (t) => _render(t, 'splash.png', canvas: 768, mark: 288));
 }

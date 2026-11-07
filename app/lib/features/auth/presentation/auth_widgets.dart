@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:solar_icons/solar_icons.dart';
 
 import '../../../core/theme/app_tokens.dart';
 import '../../../core/theme/sema_colors.dart';
 import '../../../core/widgets/sema_logo.dart';
+import '../../../core/widgets/theme_toggle.dart';
 
 /// Shared layout for the auth forms: back button, logo, title, form.
 class AuthScaffold extends StatelessWidget {
@@ -30,6 +32,10 @@ class AuthScaffold extends StatelessWidget {
         leading: showBack && context.canPop()
             ? IconButton(icon: const Icon(SolarIconsOutline.altArrowLeft), onPressed: () => context.pop())
             : null,
+        actions: const [
+          ThemeToggle(),
+          SizedBox(width: Space.xs),
+        ],
       ),
       body: SafeArea(
         top: false,
@@ -168,11 +174,12 @@ class GoogleButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool loading;
 
+  /// The official multicolour Google "G", as Google's sign-in branding requires.
   @override
   Widget build(BuildContext context) => OutlinedButton.icon(
     onPressed: loading ? null : onPressed,
-    icon: const Icon(SolarIconsBold.squareAcademicCap),
-    label: const Text('Continue with ALU Google account'),
+    icon: SvgPicture.asset('assets/brand/google_g.svg', width: 20, height: 20),
+    label: const Text('Continue with Google'),
   );
 }
 

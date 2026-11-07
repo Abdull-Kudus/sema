@@ -6,7 +6,11 @@ import 'app_tokens.dart';
 import 'sema_colors.dart';
 
 abstract final class AppTheme {
-  static const fontFamily = 'ClashGrotesk';
+  /// Reading font for body, titles and labels.
+  static const fontFamily = 'Inter';
+
+  /// Display font for big headings only.
+  static const displayFamily = 'ClashGrotesk';
 
   static ThemeData light() => _build(SemaColors.light, Brightness.light);
   static ThemeData dark() => _build(SemaColors.dark, Brightness.dark);
@@ -181,33 +185,41 @@ abstract final class AppTheme {
 
   static const _flat = WidgetStatePropertyAll<double>(0);
 
+  /// Clash Grotesk is a display face: it carries headings only. Everything
+  /// read at small sizes uses Inter, which stays crisp and solid on phone screens.
   static TextTheme _textTheme(SemaColors c) {
-    TextStyle s(double size, FontWeight weight, {double height = 1.3, double spacing = 0, Color? color}) =>
-        TextStyle(
-          fontFamily: fontFamily,
-          fontSize: size,
-          fontWeight: weight,
-          height: height,
-          letterSpacing: spacing,
-          color: color ?? c.text,
-        );
+    TextStyle s(
+      double size,
+      FontWeight weight, {
+      String family = fontFamily,
+      double height = 1.3,
+      double spacing = 0,
+      Color? color,
+    }) => TextStyle(
+      fontFamily: family,
+      fontSize: size,
+      fontWeight: weight,
+      height: height,
+      letterSpacing: spacing,
+      color: color ?? c.text,
+    );
 
     return TextTheme(
-      displayLarge: s(44, FontWeight.w600, height: 1.05, spacing: -1.2),
-      displayMedium: s(36, FontWeight.w600, height: 1.08, spacing: -0.9),
-      displaySmall: s(30, FontWeight.w600, height: 1.1, spacing: -0.6),
-      headlineLarge: s(28, FontWeight.w600, height: 1.15, spacing: -0.5),
-      headlineMedium: s(24, FontWeight.w600, height: 1.2, spacing: -0.4),
-      headlineSmall: s(20, FontWeight.w600, height: 1.25, spacing: -0.2),
-      titleLarge: s(18, FontWeight.w600, height: 1.3),
-      titleMedium: s(16, FontWeight.w600, height: 1.3),
-      titleSmall: s(15, FontWeight.w500, height: 1.3),
+      displayLarge: s(44, FontWeight.w600, family: displayFamily, height: 1.05, spacing: -1.2),
+      displayMedium: s(36, FontWeight.w600, family: displayFamily, height: 1.08, spacing: -0.9),
+      displaySmall: s(30, FontWeight.w600, family: displayFamily, height: 1.1, spacing: -0.6),
+      headlineLarge: s(28, FontWeight.w600, family: displayFamily, height: 1.15, spacing: -0.5),
+      headlineMedium: s(24, FontWeight.w600, family: displayFamily, height: 1.2, spacing: -0.4),
+      headlineSmall: s(20, FontWeight.w600, family: displayFamily, height: 1.25, spacing: -0.2),
+      titleLarge: s(18, FontWeight.w700, height: 1.3, spacing: -0.2),
+      titleMedium: s(16, FontWeight.w600, height: 1.3, spacing: -0.1),
+      titleSmall: s(15, FontWeight.w600, height: 1.3),
       bodyLarge: s(16, FontWeight.w400, height: 1.5),
       bodyMedium: s(14, FontWeight.w400, height: 1.5),
-      bodySmall: s(12.5, FontWeight.w400, height: 1.45, color: c.muted),
-      labelLarge: s(14, FontWeight.w500),
-      labelMedium: s(12.5, FontWeight.w500),
-      labelSmall: s(11, FontWeight.w500, spacing: 0.6, color: c.muted),
+      bodySmall: s(13, FontWeight.w500, height: 1.45, color: c.muted),
+      labelLarge: s(14, FontWeight.w600),
+      labelMedium: s(13, FontWeight.w500),
+      labelSmall: s(12, FontWeight.w500, spacing: 0.2, color: c.muted),
     );
   }
 }
