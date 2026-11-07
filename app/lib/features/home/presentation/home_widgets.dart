@@ -39,7 +39,7 @@ class HomeHeader extends ConsumerWidget {
             children: [
               Text('${Formatters.greeting()},', style: context.text.bodyMedium?.copyWith(color: c.muted)),
               Text(
-                user.firstName,
+                user.name,
                 style: context.text.headlineSmall,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

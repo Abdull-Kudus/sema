@@ -33,6 +33,7 @@ dependencies:
   solar_icons: ^0.2.0
   intl: ^0.20.3
   supabase_flutter: ^2.18.3
+  flutter_svg: ^2.3.2
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +61,17 @@ flutter:
         - asset: assets/fonts/ClashGrotesk-Semibold.otf
           weight: 600
         - asset: assets/fonts/ClashGrotesk-Bold.otf
+          weight: 700
+    # Inter (SIL OFL, assets/fonts/Inter-LICENSE.txt): crisp body text at small sizes.
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
           weight: 700
 
 # `dart run flutter_launcher_icons` — icons are rendered from SemaMark by

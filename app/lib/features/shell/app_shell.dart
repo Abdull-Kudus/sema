@@ -17,11 +17,13 @@ class AppShell extends ConsumerWidget {
 
   final StatefulNavigationShell shell;
 
+  // Outline icons in both states: Solar's bold set turns into solid blobs at
+  // 24 px, so selection is shown with colour and a soft pill instead.
   static const _tabs = [
-    (SolarIconsOutline.home2, SolarIconsBold.home2, 'Home'),
-    (SolarIconsOutline.documentText, SolarIconsBold.documentText, 'Reports'),
-    (SolarIconsOutline.bell, SolarIconsBold.bell, 'Alerts'),
-    (SolarIconsOutline.userCircle, SolarIconsBold.userCircle, 'Profile'),
+    (SolarIconsOutline.home2, 'Home'),
+    (SolarIconsOutline.documentText, 'Reports'),
+    (SolarIconsOutline.bell, 'Alerts'),
+    (SolarIconsOutline.userCircle, 'Profile'),
   ];
 
   @override
@@ -30,7 +32,7 @@ class AppShell extends ConsumerWidget {
     final unread = ref.watch(unreadCountProvider);
 
     Widget tab(int i) {
-      final (icon, active, label) = _tabs[i];
+      final (icon, label) = _tabs[i];
       final selected = shell.currentIndex == i;
       return Expanded(
         child: InkResponse(
@@ -46,14 +48,14 @@ class AppShell extends ConsumerWidget {
                 isLabelVisible: i == 2 && unread > 0,
                 label: Text('$unread'),
                 backgroundColor: c.crimson.fg,
-                child: AnimatedSwitcher(
+                child: AnimatedContainer(
                   duration: Motion.fast,
-                  child: Icon(
-                    selected ? active : icon,
-                    key: ValueKey(selected),
-                    color: selected ? c.brandText : c.muted,
-                    size: 24,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: selected ? c.brandSoft : Colors.transparent,
+                    borderRadius: BorderRadius.circular(Radii.pill),
                   ),
+                  child: Icon(icon, color: selected ? c.brandText : c.muted, size: 24),
                 ),
               ),
               const SizedBox(height: 4),
@@ -61,7 +63,8 @@ class AppShell extends ConsumerWidget {
                 label,
                 style: context.text.labelMedium?.copyWith(
                   color: selected ? c.brandText : c.muted,
-                  fontSize: 11.5,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 12,
                 ),
               ),
             ],
@@ -119,7 +122,7 @@ class _ReportButton extends StatelessWidget {
           width: 54,
           height: 54,
           decoration: BoxDecoration(shape: BoxShape.circle, gradient: c.hero),
-          child: Icon(SolarIconsOutline.addCircle, color: c.onBrand, size: 28),
+          child: Icon(Icons.add_rounded, color: c.onBrand, size: 32),
         ),
       ).animate().scale(delay: 200.ms, duration: Motion.medium, curve: Curves.easeOutBack),
     );

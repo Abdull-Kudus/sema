@@ -133,7 +133,7 @@ class _ReportHero extends StatelessWidget {
                 const SizedBox(height: Space.xs),
                 Text(
                   'Report it in under a minute and follow every step until it is fixed.',
-                  style: context.text.bodyMedium?.copyWith(color: c.onBrand.withValues(alpha: 0.85)),
+                  style: context.text.bodyMedium?.copyWith(color: c.onBrand),
                 ),
                 const SizedBox(height: Space.md),
                 Pressable(
