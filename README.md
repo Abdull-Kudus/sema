@@ -75,6 +75,33 @@ reports/{id}                    title, description, category, priority, status,
 Storage: reports/{uid}/{reportId}/{file}.jpg · avatars/{uid}/avatar.jpg
 ```
 
+## Install the APK (Android)
+
+1. On your phone, open the repository's **Releases** page on GitHub and download `sema-vX.Y.Z.apk` from the latest release.
+2. Open the downloaded file. If Android asks, allow **Install unknown apps** for your browser or Files app (Settings → Apps → Special access).
+3. Tap **Install**, then open Sema and sign in with your ALU email (`@alustudent.com` for students, `@alueducation.com` for staff).
+
+Requires Android 7.0 or newer. iOS builds need a Mac with Xcode (`flutter build ipa`).
+
+### New releases
+
+Sema does not update itself. Each release is published like this:
+
+1. Bump `version:` in `app/pubspec.yaml` (for example `1.0.1+2`; the number after `+` must always go up).
+2. Build: `cd app && flutter build apk --release`.
+3. Rename `app/build/app/outputs/flutter-apk/app-release.apk` to `sema-v1.0.1.apk`.
+4. On GitHub: **Releases → Draft a new release**, tag `v1.0.1`, attach the APK and list the changes.
+
+Users install the new APK over the old one, and their data is kept because it lives in Firebase. Users can check which version they have under Profile → About.
+
+## Diagrams
+
+The PlantUML sources are in `docs/diagrams/`: ERD, use cases, architecture, the status-update sequence and the report activity flow. To render them to PNG, run `java -jar plantuml.jar -tpng docs/diagrams/*.puml` (get the jar from plantuml.com), or use the VS Code PlantUML extension.
+
+## Demo data
+
+`node backend/seed/seed.mjs` seeds 8 realistic reports with openly licensed photos (credits in `backend/seed/PHOTO-CREDITS.md`), their status history and the students' alerts. It reads the demo passwords from gitignored `*.local.md` files.
+
 ## Run it
 
 ```bash
