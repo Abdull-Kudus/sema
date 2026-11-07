@@ -31,4 +31,7 @@ abstract final class Motion {
   static const slow = Duration(milliseconds: 600);
   static const counter = Duration(milliseconds: 1100);
   static const stagger = Duration(milliseconds: 60);
+
+  /// One full lap of the welcome-screen orbit: slow enough to stay calm.
+  static const orbit = Duration(seconds: 30);
 }
