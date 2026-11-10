@@ -103,7 +103,7 @@ The ERD, use case, architecture, status-update sequence and report activity diag
 cd app
 flutter pub get
 flutter run            # Android emulator or device
-flutter test           # 33 tests
+flutter test           # 86 tests
 ```
 
 Deploy rules (from the repo root): `firebase deploy --only firestore,storage`.
